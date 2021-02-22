@@ -40,3 +40,51 @@ steps:
       - 'push'
       - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
 # [END cloudbuild]
+
+  # [START cloudbuild-trigger-cd]
+  - name: 'gcr.io/cloud-builders/git'
+    id: Clone env repository from github
+    args:
+      - clone
+      - --recurse-submodules
+      - git@github.com:rafty/gcp-gke-gitops-env.git
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: switch to candidate branch
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        set -x && \
+        cd gcp-gke-gitops-env && \
+        git checkout candidate && \
+        git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
+
+  # This step generates the new manifest
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: Generate manifest
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
+        sed "s/COMMIT_SHA/${SHORT_SHA}/g" > gcp-gke-gitops-env/kubernetes.yaml
+
+  # This step pushes the manifest back to gcp-gke-gitops-env
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: Push manifest
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        set -x && \
+        cd gcp-gke-gitops-env && \
+        git add kubernetes.yaml && \
+        git commit -m "Deploying image gcr.io/${PROJECT_ID}/hello-cloudbuild:${SHORT_SHA}
+        Built from commit ${COMMIT_SHA} of repository gcp-gke-gitops--app
+        Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+        git push origin candidate
+# [END cloudbuild-trigger-cd]
