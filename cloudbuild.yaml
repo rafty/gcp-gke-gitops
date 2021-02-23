@@ -94,7 +94,6 @@ steps:
       - |
         set -x && \
         sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
-        # sed "s/COMMIT_SHA/${SHORT_SHA}/g" > gcp-gke-gitops-env/kubernetes.yaml
         sed "s/COMMIT_SHA/${SHORT_SHA}/g" > kubernetes.yaml
 
   - id: Push the manifest back to gcp-gke-gitops-env
@@ -105,7 +104,6 @@ steps:
       - '-c'
       - |
         set -x && \
-        # cd gcp-gke-gitops-env && \
         git add kubernetes.yaml && \
         git commit -m "Deploying image gcr.io/${PROJECT_ID}/$_SERVICE_NAME:${SHORT_SHA}
         Built from commit ${COMMIT_SHA} of repository gcp-gke-gitops-app
