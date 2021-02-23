@@ -114,6 +114,9 @@ steps:
         ## git checkout candidate
         git fetch origin candidate && \
         git switch candidate
+    volumes:
+      - name: 'ssh'
+        path: /root/.ssh
 
   - id: Generates the new manifest
     name: 'gcr.io/cloud-builders/gcloud'
