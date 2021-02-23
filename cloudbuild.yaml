@@ -63,7 +63,7 @@ steps:
         path: /root/.ssh
   # GitHub Access
 
-  - id: Clone env repository from github
+  - id: Connect to the env repository of GitHub
     name: 'gcr.io/cloud-builders/git'
     args:
       - clone
@@ -75,32 +75,37 @@ steps:
 
   - id: switch to candidate branch
     name: 'gcr.io/cloud-builders/gcloud'
+    dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
       - |
         set -x && \
-        cd gcp-gke-gitops-env && \
+        # cd gcp-gke-gitops-env && \
         git checkout candidate && \
         git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
   - id: Generates the new manifest
     name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: /bin/sh
-    args:
-      - '-c'
-      - |
-        sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
-        sed "s/COMMIT_SHA/${SHORT_SHA}/g" > gcp-gke-gitops-env/kubernetes.yaml
-
-  - id: Push the manifest back to gcp-gke-gitops-env
-    name: 'gcr.io/cloud-builders/gcloud'
+    dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
       - |
         set -x && \
-        cd gcp-gke-gitops-env && \
+        sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
+        # sed "s/COMMIT_SHA/${SHORT_SHA}/g" > gcp-gke-gitops-env/kubernetes.yaml
+        sed "s/COMMIT_SHA/${SHORT_SHA}/g" > kubernetes.yaml
+
+  - id: Push the manifest back to gcp-gke-gitops-env
+    name: 'gcr.io/cloud-builders/gcloud'
+    dir: gcp-gke-gitops-env
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        set -x && \
+        # cd gcp-gke-gitops-env && \
         git add kubernetes.yaml && \
         git commit -m "Deploying image gcr.io/${PROJECT_ID}/$_SERVICE_NAME:${SHORT_SHA}
         Built from commit ${COMMIT_SHA} of repository gcp-gke-gitops-app
