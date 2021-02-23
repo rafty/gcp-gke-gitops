@@ -34,7 +34,7 @@ steps:
       - 'push'
       - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
 
-
+  # GitHub Access
   - id: access the id_github file from secret manager
     name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
@@ -61,6 +61,7 @@ steps:
     volumes:
       - name: 'ssh'
         path: /root/.ssh
+  # GitHub Access
 
   - id: Clone env repository from github
     name: 'gcr.io/cloud-builders/git'
