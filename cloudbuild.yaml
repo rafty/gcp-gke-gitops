@@ -101,12 +101,14 @@ steps:
 
   - id: Push the manifest back to gcp-gke-gitops-env
     name: 'gcr.io/cloud-builders/gcloud'
-    dir: gcp-gke-gitops-env
+    # dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
       - |
         set -x && \
+        pwd && \
+        ls -al && \
         git add kubernetes.yaml && \
         git commit -m "Deploying image gcr.io/${PROJECT_ID}/$_SERVICE_NAME:${SHORT_SHA}
         Built from commit ${COMMIT_SHA} of repository gcp-gke-gitops-app
