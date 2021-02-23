@@ -34,7 +34,7 @@ steps:
       - 'push'
       - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
 
-  # GitHub Access
+  # GitHub Env repo Access
   - id: access the id_github file from secret manager
     name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
@@ -61,7 +61,6 @@ steps:
     volumes:
       - name: 'ssh'
         path: /root/.ssh
-  # GitHub Access
 
   - id: Connect to the env repository of GitHub
     name: 'gcr.io/cloud-builders/git'
@@ -72,11 +71,23 @@ steps:
     volumes:
       - name: 'ssh'
         path: /root/.ssh
+  # GitHub Env repo Access
 
+  #  Confirm 1
+  - id: Confirm local
+    name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: /bin/sh
+    args:
+      - '-c'
+      - |
+        set -x && \
+        pwd && \
+        ls -al && \
 
-
+  #  Confirm 2
   - id: Confirm GitHub
     name: 'gcr.io/cloud-builders/gcloud'
+    dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
@@ -89,7 +100,7 @@ steps:
       - name: 'ssh'
         path: /root/.ssh
 
-
+  # from koko kara
   - id: switch to candidate branch
     name: 'gcr.io/cloud-builders/gcloud'
     # dir: gcp-gke-gitops-env
