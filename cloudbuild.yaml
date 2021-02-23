@@ -82,7 +82,7 @@ steps:
       - |
         set -x && \
         pwd && \
-        ls -al && \
+        ls -al
 
   #  Confirm 2
   - id: Confirm GitHub
