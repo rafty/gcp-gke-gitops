@@ -41,7 +41,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
 # [END cloudbuild]
 
-  # [START cloudbuild-trigger-cd]
+# [START cloudbuild-trigger-cd]
   - name: 'gcr.io/cloud-builders/git'
     id: Clone env repository from github
     args:
