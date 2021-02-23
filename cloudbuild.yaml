@@ -109,6 +109,7 @@ steps:
         set -x && \
         pwd && \
         ls -al && \
+        git config --global user.email $(git log --format='%an <%ae>' -n 1 HEAD | sed 's/.*\<\([^>]*\)\>.*/\1/g') && \
         git add kubernetes.yaml && \
         git commit \
         --author="Cloud Build Service Account <$(gcloud auth list --filter=status:ACTIVE --format='value(account)')>" \
