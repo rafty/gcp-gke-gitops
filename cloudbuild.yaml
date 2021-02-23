@@ -75,15 +75,17 @@ steps:
 
   - id: switch to candidate branch
     name: 'gcr.io/cloud-builders/gcloud'
-    dir: gcp-gke-gitops-env
+    # dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
       - |
         set -x && \
-        # cd gcp-gke-gitops-env && \
-        git checkout candidate && \
-        git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
+        # git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
+        git config --global user.email $(git log --format='%an <%ae>' -n 1 HEAD | sed 's/.*\<\([^>]*\)\>.*/\1/g') && \
+        # git checkout candidate
+        git fetch origin candidate && \
+        git switch candidate
 
   - id: Generates the new manifest
     name: 'gcr.io/cloud-builders/gcloud'
