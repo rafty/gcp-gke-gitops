@@ -87,11 +87,12 @@ steps:
 
   - id: Generates the new manifest
     name: 'gcr.io/cloud-builders/gcloud'
-    dir: gcp-gke-gitops-env
+    # dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
       - |
+        pwd && \
         ls -al && \
         set -x && \
         sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
