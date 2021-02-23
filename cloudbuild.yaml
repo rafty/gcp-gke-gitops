@@ -94,7 +94,7 @@ steps:
       - |
         set -x && \
         git remote -v && \
-        git frtch && \
+        git fetch && \
         git branch -a
     volumes:
       - name: 'ssh'
@@ -103,7 +103,7 @@ steps:
   # from koko kara
   - id: switch to candidate branch
     name: 'gcr.io/cloud-builders/gcloud'
-    # dir: gcp-gke-gitops-env
+    dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
@@ -117,7 +117,6 @@ steps:
 
   - id: Generates the new manifest
     name: 'gcr.io/cloud-builders/gcloud'
-    # dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
@@ -126,12 +125,11 @@ steps:
         ls -al && \
         set -x && \
         sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
-        sed "s/COMMIT_SHA/${SHORT_SHA}/g" > kubernetes.yaml && \
-        cat kubernetes.yaml
+        sed "s/COMMIT_SHA/${SHORT_SHA}/g" > gcp-gke-gitops-env/kubernetes.yaml
 
   - id: Push the manifest back to gcp-gke-gitops-env
     name: 'gcr.io/cloud-builders/gcloud'
-    # dir: gcp-gke-gitops-env
+    dir: gcp-gke-gitops-env
     entrypoint: /bin/sh
     args:
       - '-c'
