@@ -145,7 +145,7 @@ steps:
         -m "Deploying image gcr.io/${PROJECT_ID}/$_SERVICE_NAME:${SHORT_SHA}
         Built from commit ${COMMIT_SHA} of repository gcp-gke-gitops-app
         Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
-        git branch && \
+        # git branch && \
         git push origin candidate
     volumes:
       - name: 'ssh'
