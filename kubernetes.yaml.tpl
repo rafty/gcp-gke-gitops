@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: gke-gitops
-          image: gcr.io/GOOGLE_CLOUD_PROJECT/gke-gitops:COMMIT_SHA
+          image: gcr.io/GOOGLE_CLOUD_PROJECT/MY_SERVICE_NAME:COMMIT_SHA
           ports:
             - containerPort: 8080
 ---
