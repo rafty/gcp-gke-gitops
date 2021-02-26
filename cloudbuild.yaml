@@ -15,7 +15,7 @@ steps:
     args:
       - -c
       - |
-        python -m unittest discover --verbose ./test/test_app1.py
+        python -m unittest discover --verbose test/test_app1.py
 
   - id: Build the container image
     name: gcr.io/cloud-builders/docker
