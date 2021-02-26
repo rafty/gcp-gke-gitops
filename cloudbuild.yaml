@@ -27,6 +27,7 @@ steps:
     args:
       - -c
       - |
+        pip install flask
         python -m unittest discover test --verbose
 
   - id: Build the container image
