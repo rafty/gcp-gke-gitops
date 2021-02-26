@@ -19,7 +19,7 @@ steps:
       - |
         set -x && \
         pwd && \
-        ls -al
+        ls -alR
 
   - id: 'Unit tests on the app'
     name: python:3.7-slim
