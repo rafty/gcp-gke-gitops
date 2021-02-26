@@ -9,6 +9,18 @@ steps:
 #    args:
 #      - -c
 #      - pip install flask && python test/test_app1.py -v
+
+  #  for Debug
+  - id: Confirm local
+    name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: /bin/sh
+    args:
+      - -c
+      - |
+        set -x && \
+        pwd && \
+        ls -al
+
   - id: 'Unit tests on the app'
     name: python:3.7-slim
     entrypoint: /bin/sh
