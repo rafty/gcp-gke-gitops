@@ -16,7 +16,7 @@
 FROM python:3.7-slim
 RUN pip install flask
 WORKDIR /app
-COPY /app/app.py /app/app.py
+COPY /app/app1.py /app/app1.py
 ENTRYPOINT ["python"]
-CMD ["/app/app.py"]
+CMD ["/app/app1.py"]
 # [END dockerfile]
