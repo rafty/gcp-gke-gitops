@@ -14,7 +14,7 @@ steps:
       - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA
       - '.'
 
-  - id: 'Pushe the image to Container Registry'
+  - id: 'Push the image to Container Registry'
     name: gcr.io/cloud-builders/docker
     args:
       - push
